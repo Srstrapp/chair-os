@@ -1,10 +1,15 @@
 // API Service - Conexión con el backend
 
-const API_BASE = '/api/v1';
+// En desarrollo usa proxy, en producción usa la variable de entorno
+const API_BASE = import.meta.env.VITE_API_URL || '/api/v1';
 
 class ApiService {
   constructor() {
-    this.baseUrl = API_BASE;
+    // Si VITE_API_URL empieza con / es relativa (desarrollo)
+    // Si tiene dominio completo, usa ese (producción)
+    this.baseUrl = API_BASE.startsWith('/') 
+      ? API_BASE 
+      : `${API_BASE}/api/v1`;
   }
 
   async request(endpoint, options = {}) {

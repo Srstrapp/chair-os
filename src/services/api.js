@@ -6,10 +6,11 @@ const API_BASE = import.meta.env.VITE_API_URL || '/api/v1';
 class ApiService {
   constructor() {
     // Si VITE_API_URL empieza con / es relativa (desarrollo)
-    // Si tiene dominio completo, usa ese (producción)
-    this.baseUrl = API_BASE.startsWith('/') 
-      ? API_BASE 
-      : `${API_BASE}/api/v1`;
+    // Si tiene dominio completo, usa ese + /api/v1
+    const base = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
+    this.baseUrl = base.startsWith('/') 
+      ? base 
+      : `${base}/api/v1`;
   }
 
   async request(endpoint, options = {}) {

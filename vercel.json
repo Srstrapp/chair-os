@@ -1,8 +1,8 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://chair-os-api.up.railway.app/api/$1" }
+    { "source": "/api/:path*", "destination": "https://chair-os-api-production.up.railway.app/api/:path*" }
   ],
   "routes": [
-    { "src": "/[^.]*", "dest": "/", "status": 200 }
+    { "src": "/(.*)", "dest": "/index.html", "status": 200 }
   ]
 }

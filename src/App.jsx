@@ -22,6 +22,7 @@ function Layout({ children }) {
   const { currentShop, shops, setCurrentShop, user, isOnline, pendingSync, logout } = useApp();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = window.location.pathname;
+  const navigate = useNavigate();
   
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', emoji: '◉' },
@@ -37,8 +38,8 @@ function Layout({ children }) {
 
   const isActive = (id) => location === `/${id}` || (location === '/' && id === 'dashboard');
 
-  const navigate = (path) => {
-    window.location.href = path;
+  const handleNavigate = (path) => {
+    navigate(path);
     setSidebarOpen(false);
   };
 
@@ -98,7 +99,7 @@ function Layout({ children }) {
             {navItems.map(item => (
               <button
                 key={item.id}
-                onClick={() => navigate(`/${item.id === 'dashboard' ? '' : item.id}`)}
+                onClick={() => handleNavigate(`/${item.id === 'dashboard' ? '' : item.id}`)}
                 className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl transition-all duration-200 ${
                   isActive(item.id)
                     ? 'bg-gradient-to-r from-violet-600/20 to-purple-600/20 text-white border border-violet-500/30 shadow-lg shadow-violet-500/10'
@@ -377,7 +378,7 @@ function DashboardPage() {
       <div className={`${s.card} rounded-3xl p-8`}>
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-xl font-semibold">Próximas Citas</h2>
-          <button onClick={() => window.location.href = '/appointments'} className="text-sm text-violet-400 hover:text-violet-300 transition-colors">Ver todas →</button>
+          <button onClick={() => navigate('/appointments')} className="text-sm text-violet-400 hover:text-violet-300 transition-colors">Ver todas →</button>
         </div>
         {dashboard?.upcoming_appointments?.length > 0 ? (
           <div className="grid md:grid-cols-3 gap-4">
@@ -1111,7 +1112,7 @@ function App() {
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   if (loading) {

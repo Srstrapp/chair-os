@@ -1067,27 +1067,41 @@ function App() {
   }, []);
 
   const loadInitialData = async () => {
-    try {
-      const res = await api.getBarbershops();
-      setShops(res.data);
-      if (res.data.length > 0) setCurrentShop(res.data[0]);
-      // Auto-login for prototype
-      setUser({ id: 'user-1', name: 'Juan Pérez', email: 'owner@barbershop.com', role: 'OWNER' });
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    // NO auto-login - siempre mostrar login primero
     setLoading(false);
   };
 
   const login = async (email, password) => {
     try {
+      // Try to login to backend
       await api.login(email, password);
       setUser({ id: 'user-1', name: 'Juan Pérez', email, role: 'OWNER' });
       setIsAuthenticated(true);
-      const shopsRes = await api.getBarbershops();
-      setShops(shopsRes.data);
-      if (shopsRes.data.length > 0) setCurrentShop(shopsRes.data[0]);
+      
+      // Try to get shops
+      try {
+        const shopsRes = await api.getBarbershops();
+        setShops(shopsRes.data);
+        if (shopsRes.data.length > 0) setCurrentShop(shopsRes.data[0]);
+      } catch {
+        // Use mock data if backend fails
+        setShops([{
+          id: 'shop-1',
+          name: 'Barbería Central',
+          address: 'Av. Libertador, Caracas',
+          bcv_rate_today: 36.50,
+          zelle_min: 5.00,
+          pay_day: 'biweekly'
+        }]);
+        setCurrentShop({
+          id: 'shop-1',
+          name: 'Barbería Central',
+          address: 'Av. Libertador, Caracas',
+          bcv_rate_today: 36.50,
+          zelle_min: 5.00,
+          pay_day: 'biweekly'
+        });
+      }
       return true;
     } catch (error) {
       return false;
